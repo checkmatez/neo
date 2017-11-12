@@ -6,15 +6,72 @@ type User @model {
   # Optional system fields (remove if not needed):
   createdAt: DateTime! # read-only (managed by Graphcool)
   updatedAt: DateTime! # read-only (managed by Graphcool)
-  # added by email-password template
+  # email-password template
   email: String! @isUnique
   password: String!
   # custom
-  name: String
+  firstName: String
+  lastName: String
   dateOfBirth: DateTime
 
   # Uncomment below - you can declare relations between models like this
   # posts: [Post!]! @relation(name: "UserPosts")
+}
+
+type Organization @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  # custom
+  name: String!
+}
+
+type Commodity implements Notes @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  # custom
+  name: String!
+  type: CommodityType! @defaultValue(value: "GOODS")
+  vendorCode: String
+  barCode: String
+  notes: String
+}
+
+enum CommodityType {
+  GOODS
+  SERVICE
+}
+
+interface Notes {
+  notes: String
+}
+
+type Partner implements Notes @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  # custom
+  name: String!
+  legalName: String
+  notes: String
+  contactInformation: [ContactInformation!]! @relation(name: "PartnerContactInformation")
+}
+
+type ContactInformation @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  # custom
+  partner: Partner @relation(name: "PartnerContactInformation")
+  type: ContactInformationType!
+  value: String!
+}
+
+enum ContactInformationType {
+  PHONE_NUMBER
+  EMAIL
+  ADDRESS
 }
 
 # Uncomment the model below as well

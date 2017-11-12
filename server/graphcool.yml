@@ -41,10 +41,16 @@ functions:
 # added by email-password template
 
   hello:
-    handler:
-      code: src/hello.js
     type: resolver
     schema: src/hello.graphql
+    handler:
+      code: src/hello.js
+
+  beforeCreateContactInformation:
+    type: operationBefore
+    operation: ContactInformation.create
+    handler:
+      code: src/contact-information/beforeCreateContactInformation.js
 
 
 # Model/Relation permissions are used to limit the API access
