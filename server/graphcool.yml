@@ -40,12 +40,6 @@ functions:
       code: src/email-password/loggedInUser.ts
 # added by email-password template
 
-  hello:
-    type: resolver
-    schema: src/hello.graphql
-    handler:
-      code: src/hello.js
-
   beforeCreateContactInformation:
     type: operationBefore
     operation: ContactInformation.create
