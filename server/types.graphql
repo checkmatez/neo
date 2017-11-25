@@ -13,7 +13,8 @@ type User @model {
   firstName: String
   lastName: String
   dateOfBirth: DateTime
-
+  organizations: [Organization!]! @relation(name: "UsersInOrganizations")
+  contactInformation: [ContactInformation!]! @relation(name: "UserContactInformation")
   # Uncomment below - you can declare relations between models like this
   # posts: [Post!]! @relation(name: "UserPosts")
 }
@@ -24,6 +25,7 @@ type Organization @model {
   updatedAt: DateTime!
   # custom
   name: String!
+  users: [User!]! @relation(name: "UsersInOrganizations")
 }
 
 type Commodity implements Notes @model {
@@ -36,6 +38,7 @@ type Commodity implements Notes @model {
   vendorCode: String
   barCode: String
   notes: String
+  clientOrder: ClientOrder @relation(name: "ClientOrderCommodities")
 }
 
 enum CommodityType {
@@ -56,6 +59,7 @@ type Partner implements Notes @model {
   legalName: String
   notes: String
   contactInformation: [ContactInformation!]! @relation(name: "PartnerContactInformation")
+  clientOrders: [ClientOrder!]! @relation(name: "ClientOrderPartner")
 }
 
 type ContactInformation @model {
@@ -63,15 +67,30 @@ type ContactInformation @model {
   createdAt: DateTime!
   updatedAt: DateTime!
   # custom
-  partner: Partner @relation(name: "PartnerContactInformation")
   type: ContactInformationType!
   value: String!
+  partner: Partner @relation(name: "PartnerContactInformation")
+  user: User @relation(name: "UserContactInformation")
+  clientOrder: ClientOrder @relation(name: "ClientOrderDeliveryAddress")
 }
 
 enum ContactInformationType {
   PHONE_NUMBER
   EMAIL
   ADDRESS
+}
+
+type ClientOrder implements Notes @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  # custom
+  orderNumber: Int!
+  date: DateTime!
+  client: Partner! @relation(name: "ClientOrderPartner")
+  notes: String
+  deliveryAddress: ContactInformation @relation(name: "ClientOrderDeliveryAddress")
+  products: [Commodity!]! @relation(name: "ClientOrderCommodities")
 }
 
 # Uncomment the model below as well
